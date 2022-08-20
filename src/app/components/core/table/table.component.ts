@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Column } from 'src/app/models/column.model';
 
 
 export interface UserData {
@@ -61,18 +62,12 @@ const imports = [
 })
 export class TableComponent implements AfterViewInit {
 
-  private _tableData: any[] = [];
+  displayedColumns: string[] = [];
+  @Input()
+  tableData: any[] = [];
+  @Input()
+  columns: Column[] = [];
 
-  @Input()
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  @Input()
-  get tableData() {
-    console.log(this._tableData);
-    return this._tableData;
-  }
-  set tableData(value) {
-    this._tableData = value;
-  }
   dataSource: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -97,6 +92,18 @@ export class TableComponent implements AfterViewInit {
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  private simpleChangeCheck(change: SimpleChange) {
+    return change && change.currentValue !== change.previousValue;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const columns = changes['columns'];
+    if (this.simpleChangeCheck(columns)) {
+      this.columns = columns.currentValue ?? [];
+      this.displayedColumns = this.columns.map(col => col.colName);
     }
   }
 }

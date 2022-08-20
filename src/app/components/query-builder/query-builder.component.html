@@ -23,10 +23,11 @@
         </button>
     </mat-card-actions>
 </mat-card>
-{{ tableData$ | async | json }}
 <mat-card>
     <mat-card-title>Table Data</mat-card-title>
     <mat-card-content>
-        <sqb-table></sqb-table>
+        <ng-container *ngIf="tableData$ | async as tableData">
+            <sqb-table [tableData]="tableData.data" [columns]="tableData.columns"></sqb-table>
+        </ng-container>
     </mat-card-content>
 </mat-card>
