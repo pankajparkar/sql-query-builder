@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -61,7 +61,18 @@ const imports = [
 })
 export class TableComponent {
 
+  private _tableData: any[] = [];
+
+  @Input()
   displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
+  @Input()
+  get tableData() {
+    console.log(this._tableData);
+    return this._tableData;
+  }
+  set tableData(value) {
+    this._tableData = value;
+  }
   dataSource: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
