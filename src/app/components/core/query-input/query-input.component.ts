@@ -1,10 +1,13 @@
-import { Component, ElementRef, Input, OnDestroy, Optional, Self } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 import { Textcomplete } from "@textcomplete/core";
 import { TextareaEditor } from "@textcomplete/textarea";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { EMOJI_STRATEGY } from './strategy';
 
 @Component({
   selector: 'sqb-query-input',
@@ -12,16 +15,20 @@ import { TextareaEditor } from "@textcomplete/textarea";
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
   templateUrl: './query-input.component.html',
   styleUrls: ['./query-input.component.scss']
 })
 export class QueryInputComponent implements ControlValueAccessor, OnDestroy {
-  @Input() label!: string;
-  @Input() placeholder!: string;
+  @Input() sqlQuery!: string;
 
   control!: FormControl;
   destroyed = new Subject<void>();
+
+  @ViewChild(MatInput) input!: MatInput;
 
   constructor(
     private el: ElementRef,
@@ -48,8 +55,9 @@ export class QueryInputComponent implements ControlValueAccessor, OnDestroy {
   setDisabledState(): void { }
 
   ngAfterViewInit() {
-    const editor = new TextareaEditor(this.el.nativeElement)
-    const textcomplete = new Textcomplete(editor, []);
+    const input = this.el.nativeElement.querySelector('textarea');
+    const editor = new TextareaEditor(input);
+    const textcomplete = new Textcomplete(editor, [EMOJI_STRATEGY]);
   }
 
   ngOnDestroy() {

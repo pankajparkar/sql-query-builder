@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QueryService } from 'src/app/services/query.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { TableData } from 'src/app/models/table-data.model';
+import { QueryInputComponent } from '../core/query-input/query-input.component';
 
 const imports = [
   CommonModule,
@@ -22,6 +23,9 @@ const imports = [
   MatFormFieldModule,
   MatSelectModule,
   MatInputModule,
+
+  // components
+  QueryInputComponent,
 ]
 
 @Component({
