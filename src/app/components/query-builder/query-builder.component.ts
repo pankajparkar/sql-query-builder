@@ -7,8 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 
-import { TableViewComponent } from '../table-view/table-view.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TableComponent } from '../core/table/table.component';
 
 const imports = [
   CommonModule,
@@ -21,7 +21,7 @@ const imports = [
   MatInputModule,
 
   // components
-  TableViewComponent,
+  TableComponent,
 ]
 
 @Component({
@@ -32,7 +32,11 @@ const imports = [
   styleUrls: ['./query-builder.component.scss']
 })
 export class QueryBuilderComponent {
-  toppings = new FormControl('');
 
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato',];
+  run() {
+
+  }
+  save() {
+
+  }
 }
