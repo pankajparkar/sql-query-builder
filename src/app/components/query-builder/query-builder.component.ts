@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,10 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TableComponent } from '../core/table/table.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QueryService } from 'src/app/services/query.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { TableData } from 'src/app/models/table-data.model';
 
 const imports = [
@@ -23,9 +22,6 @@ const imports = [
   MatFormFieldModule,
   MatSelectModule,
   MatInputModule,
-
-  // components
-  TableComponent,
 ]
 
 @Component({
@@ -37,17 +33,33 @@ const imports = [
 })
 export class QueryBuilderComponent {
 
+  destroyed$ = new Subject<void>();
   sqlQuery = '';
   tableData$: Observable<TableData> | undefined;
 
+  @ViewChild('tableView', { read: ViewContainerRef })
+  tableView!: ViewContainerRef;
+
   constructor(
-    private query: QueryService
+    private query: QueryService,
   ) { }
 
-  run() {
-    this.tableData$ = this.query.getData(this.sqlQuery);
+  async run() {
+    const tableComponent = await import('../core/table/table.component')
+      .then(i => i.TableComponent);
+    const tableCompRef = this.tableView.createComponent(tableComponent);
+    this.query.getData(this.sqlQuery)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(({ columns, data, query, queryName }) => {
+        tableCompRef.setInput('tableData', data);
+        tableCompRef.setInput('columns', columns);
+      });
   }
-  save() {
 
+  save() { }
+
+  ngOnDestroy() {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

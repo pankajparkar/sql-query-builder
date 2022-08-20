@@ -26,8 +26,7 @@
 <mat-card>
     <mat-card-title>Table Data</mat-card-title>
     <mat-card-content>
-        <ng-container *ngIf="tableData$ | async as tableData">
-            <sqb-table [tableData]="tableData.data" [columns]="tableData.columns"></sqb-table>
+        <ng-container #tableView></ng-container>
         </ng-container>
     </mat-card-content>
 </mat-card>
