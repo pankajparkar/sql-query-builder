@@ -14,9 +14,24 @@ export class QueryService {
     private http: HttpClient,
   ) { }
 
-  private transforData = (data: any) => {
-    console.log(data);
-    return data;
+  private transforData = (data: any, query: string) => {
+    let columns = [] as Column[];
+    const [firstRow] = data ?? [];
+    if (firstRow) {
+      columns = Object.keys(firstRow).map((col) => ({
+        colName: col,
+        displayName: col,
+        filtering: false,
+        hidden: false,
+        sorting: false,
+      }));
+    }
+    return {
+      columns,
+      data: data ?? [] as any[],
+      query,
+      queryName: query,
+    } as unknown as TableData;
   }
 
   getData(query: string): Observable<TableData> {
@@ -24,28 +39,28 @@ export class QueryService {
     // TODO: simplified switch case by having simple if condition
     switch (query) {
       case TableName.Category:
-        apiCall = this.http.get('/assets/category.json');
+        apiCall = this.http.get('/assets/json/category.json');
         break;
       case TableName.Customer:
-        apiCall = this.http.get('/assets/customer.json');
+        apiCall = this.http.get('/assets/json/customer.json');
         break;
       case TableName.Employee:
-        apiCall = this.http.get('/assets/employee.json');
+        apiCall = this.http.get('/assets/json/employee.json');
         break;
       case TableName.Order:
-        apiCall = this.http.get('/assets/order.json');
+        apiCall = this.http.get('/assets/json/order.json');
         break;
       case TableName.Product:
-        apiCall = this.http.get('/assets/product.json');
+        apiCall = this.http.get('/assets/json/product.json');
         break;
       case TableName.Region:
-        apiCall = this.http.get('/assets/region.json');
+        apiCall = this.http.get('/assets/json/region.json');
         break;
       case TableName.Shipper:
-        apiCall = this.http.get('/assets/shipper.json');
+        apiCall = this.http.get('/assets/json/shipper.json');
         break;
       case TableName.Supplier:
-        apiCall = this.http.get('/assets/supplier.json');
+        apiCall = this.http.get('/assets/json/supplier.json');
         break;
       default:
         return of<TableData>({
@@ -56,7 +71,7 @@ export class QueryService {
         } as unknown as TableData);
     }
     return apiCall.pipe(
-      map(this.transforData),
+      map((data) => this.transforData(data, query)),
     );
   }
 }

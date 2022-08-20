@@ -10,7 +10,7 @@
     <mat-card-content>
         <mat-form-field appearance="fill">
             <mat-label>Textarea</mat-label>
-            <textarea matInput></textarea>
+            <textarea matInput [(ngModel)]="sqlQuery"></textarea>
         </mat-form-field>
     </mat-card-content>
     <mat-divider inset></mat-divider>
@@ -23,7 +23,7 @@
         </button>
     </mat-card-actions>
 </mat-card>
-
+{{ tableData$ | async | json }}
 <mat-card>
     <mat-card-title>Table Data</mat-card-title>
     <mat-card-content>

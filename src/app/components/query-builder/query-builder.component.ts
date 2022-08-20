@@ -7,12 +7,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableComponent } from '../core/table/table.component';
+import { QueryService } from 'src/app/services/query.service';
+import { Observable } from 'rxjs';
+import { TableData } from 'src/app/models/table-data.model';
 
 const imports = [
   CommonModule,
   ReactiveFormsModule,
+  FormsModule,
   MatButtonModule,
   MatCardModule,
   MatDividerModule,
@@ -33,8 +37,15 @@ const imports = [
 })
 export class QueryBuilderComponent {
 
-  run() {
+  sqlQuery = '';
+  tableData$: Observable<TableData> | undefined;
 
+  constructor(
+    private query: QueryService
+  ) { }
+
+  run() {
+    this.tableData$ = this.query.getData(this.sqlQuery);
   }
   save() {
 
