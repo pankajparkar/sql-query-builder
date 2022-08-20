@@ -1,1 +1,17 @@
-<p>navbar works!</p>
+<mat-toolbar>
+    <button mat-icon-button aria-label="Menu icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <span>SQL Query Builder</span>
+    <button mat-button routerLink="/query-builder">
+        Viewer
+    </button>
+    <button mat-button routerLink="/about">
+        About
+    </button>
+    <span class="navbar-spacer"></span>
+    <button mat-icon-button aria-label="Favorite icon">
+        <mat-icon>favorite</mat-icon>
+    </button>
+</mat-toolbar>
