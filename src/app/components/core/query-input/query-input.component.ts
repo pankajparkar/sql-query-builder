@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,11 +8,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './query-input.component.html',
   styleUrls: ['./query-input.component.scss']
 })
-export class QueryInputComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+export class QueryInputComponent {
 
 }
