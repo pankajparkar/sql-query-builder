@@ -2,7 +2,7 @@
 
 ## Initial Plan
 
-![]()
+![](https://raw.githubusercontent.com/pankajparkar/sql-query-builder/master/sql_query_builder_plan.jpg)
 
 Sorry about my handwriting on board, please forgive me 😂😂
 Anyways you can look skip to diagram instead of reading the details from picture.
