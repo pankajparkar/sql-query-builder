@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QueryService } from 'src/app/services/query.service';
-import { finalize, startWith, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { QueryInputComponent } from '../core/query-input/query-input.component';
 import { TableComponent } from '../core/table/table.component';
 
@@ -29,13 +29,13 @@ const imports = [
 ];
 
 @Component({
-  selector: 'sqb-query-builder',
+  selector: 'sqb-query-edit',
   standalone: true,
   imports,
-  templateUrl: './query-builder.component.html',
-  styleUrls: ['./query-builder.component.scss']
+  templateUrl: './query-edit.component.html',
+  styleUrls: ['./query-edit.component.scss']
 })
-export class QueryBuilderComponent {
+export class QueryEditComponent {
 
   destroyed$ = new Subject<void>();
   sqlQuery = '';
