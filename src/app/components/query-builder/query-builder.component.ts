@@ -68,6 +68,8 @@ export class QueryBuilderComponent {
 
   save() { }
 
+  compose() { }
+
   ngOnDestroy() {
     this.destroyed$.next();
     this.destroyed$.complete();
