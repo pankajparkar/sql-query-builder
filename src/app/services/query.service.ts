@@ -50,10 +50,16 @@ export class QueryService {
     return list.find(i => i.id === id);
   }
 
-  addList(newElement: SqlQuery) {
+  saveQuery(newElement: SqlQuery) {
     const list = this.storate.get<SqlQuery[]>(QUERIES) ?? [];
-    list.push(newElement);
+    const existing = list.find(l => l.id === newElement.id);
+    if (existing) {
+      Object.assign(existing, newElement);
+    } else {
+      list.push(newElement);
+    }
     this.storate.set(QUERIES, list);
+    return { update: !!existing, added: !existing };
   }
 
   getData(query: string): Observable<TableData> {

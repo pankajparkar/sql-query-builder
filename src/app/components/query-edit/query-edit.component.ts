@@ -1,5 +1,5 @@
 import { Component, ComponentRef, OnDestroy, OnInit, Query, ViewChild, ViewContainerRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -60,6 +60,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     private queryHelper: QueryHelperService,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
+    private location: Location,
   ) { }
 
   run() {
@@ -80,8 +81,15 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.queryService.addList(this.query!);
-    this.snackbar.open('Saved successfully');
+    const { update, added } = this.queryService.saveQuery(this.query!);
+    if (added) {
+      this.location.replaceState(`/query/${this.query?.id}`);
+      this.snackbar.open(`${this.query?.name} added successfully.`);
+    } else if (update) {
+      this.snackbar.open(`${this.query?.name} updated successfully.`);
+    } else {
+      this.snackbar.open(`${this.query?.name} save operation failed.`);
+    }
   }
 
   ngOnInit() {
