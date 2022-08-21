@@ -1,4 +1,4 @@
-import { Component, ComponentRef, Query, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, OnDestroy, OnInit, Query, ViewChild, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,7 +12,9 @@ import { QueryService } from 'src/app/services/query.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { QueryInputComponent } from '../core/query-input/query-input.component';
 import { TableComponent } from '../core/table/table.component';
-import { SqlQuery } from 'src/app/models/query.model';
+import { SqlQuery } from 'src/app/models/sql-query.model';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 const imports = [
   CommonModule,
@@ -24,9 +26,11 @@ const imports = [
   MatFormFieldModule,
   MatSelectModule,
   MatInputModule,
+  MatIconModule,
 
   // components
   QueryInputComponent,
+  RouterModule,
 ];
 
 @Component({
@@ -36,12 +40,15 @@ const imports = [
   templateUrl: './query-edit.component.html',
   styleUrls: ['./query-edit.component.scss']
 })
-export class QueryEditComponent {
+export class QueryEditComponent implements OnInit, OnDestroy {
 
   destroyed$ = new Subject<void>();
-  sqlQuery = '';
   showTableView = false;
+  sqlQuery = '';
   isLoading = false;
+  editTitle = false;
+  id = (Math.random() * 1000).toFixed();
+  queryName = `Query ${this.id}`;
 
   @ViewChild('tableView', { read: ViewContainerRef, static: false })
   tableView!: ViewContainerRef;
@@ -69,7 +76,8 @@ export class QueryEditComponent {
 
   save() {
     const queryObj = {
-      name: '',
+      id: this.id,
+      name: this.queryName,
       rawQuery: this.sqlQuery,
       details: {
         columns: [],
@@ -81,7 +89,9 @@ export class QueryEditComponent {
     this.queryService.addList(queryObj);
   }
 
-  compose() { }
+  ngOnInit() {
+
+  }
 
   ngOnDestroy() {
     this.destroyed$.next();

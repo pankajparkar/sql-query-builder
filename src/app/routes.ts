@@ -10,6 +10,13 @@ export const routes: Routes = [
             { path: '**', redirectTo: 'new' },
         ]
     },
-    { path: 'about', loadComponent: () => import('./components/about/about.component').then(c => c.AboutComponent) },
-    { path: '**', redirectTo: 'query-builder' },
+    {
+        path: 'about',
+        loadComponent: () => import('./components/about/about.component')
+            .then(c => c.AboutComponent),
+    },
+    {
+        path: '**',
+        redirectTo: 'query-builder',
+    },
 ];

@@ -6,6 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "build-prod": "ng build --c=production --base-href /sql-query-builder/",
+    "deploy": "gh-pages -d dist/sql-query-builder",
+    "build-deploy": "npm run build-prod && npm run copy-index && npm run deploy",
+    "copy-index": "cp dist/sql-query-builder/index.html dist/sql-query-builder/404.html",
+    "gh-pages": "gh-pages",
     "test": "ng test",
     "lint": "ng lint"
   },
@@ -23,6 +28,7 @@
     "@angular/router": "14.1.3",
     "@textcomplete/core": "^0.1.12",
     "@textcomplete/textarea": "^0.1.12",
+    "gh-pages": "^4.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

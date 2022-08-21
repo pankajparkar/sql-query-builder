@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable, of, switchMap, takeUntil, timer } from 'rxjs';
 import { TableName } from '../enums/table-name.enum';
 import { Column } from '../models/column.model';
-import { SqlQuery } from '../models/query.model';
+import { SqlQuery } from '../models/sql-query.model';
 import { TableData } from '../models/table-data.model';
 import { StorageService } from './storage.service';
 
@@ -62,44 +62,18 @@ export class QueryService {
       current = matchGroupsGenerator.next();
     }
     const [first] = groups;
-    let apiCall: Observable<any>;
-    // TODO: simplified switch case by having simple if condition
-    switch (first?.toLowerCase()) {
-      case TableName.Category:
-        apiCall = this.http.get('/assets/json/category.json');
-        break;
-      case TableName.Customer:
-        apiCall = this.http.get('/assets/json/customer.json');
-        break;
-      case TableName.Employee:
-        apiCall = this.http.get('/assets/json/employee.json');
-        break;
-      case TableName.Order:
-        apiCall = this.http.get('/assets/json/order.json');
-        break;
-      case TableName.Product:
-        apiCall = this.http.get('/assets/json/product.json');
-        break;
-      case TableName.Region:
-        apiCall = this.http.get('/assets/json/region.json');
-        break;
-      case TableName.Shipper:
-        apiCall = this.http.get('/assets/json/shipper.json');
-        break;
-      case TableName.Supplier:
-        apiCall = this.http.get('/assets/json/supplier.json');
-        break;
-      default:
-        return of<TableData>({
-          columns: [] as Column[],
-          data: [] as any[],
-          query,
-          queryName: query,
-        } as unknown as TableData);
+    const find = Object.values(TableName).find(i => i === first?.toLowerCase());
+    if (find) {
+      return timer(2000).pipe(
+        switchMap(() => this.http.get(`assets/json/${find}.json`)),
+        map((data) => this.transforData(data, query)),
+      );
     }
-    return timer(5000).pipe(
-      switchMap(() => apiCall),
-      map((data) => this.transforData(data, query)),
-    );
+    return of<TableData>({
+      columns: [] as Column[],
+      data: [] as any[],
+      query,
+      queryName: query,
+    } as unknown as TableData);
   }
 }

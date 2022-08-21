@@ -1,13 +1,17 @@
 <mat-card>
     <mat-card-content>
-        <button mat-raised-button color="secondary" (click)="compose()">
+        <button mat-raised-button color="secondary" [routerLink]="'/query-builder'">
             Compose New Query
         </button>
     </mat-card-content>
 </mat-card>
 <mat-card class="query-builder-input-wrapper">
     <mat-card-title>
-        Query Builder
+        <span #titleSpan [attr.contenteditable]="editTitle">
+            {{ queryName }}
+        </span>
+        <mat-icon *ngIf="!editTitle" (click)="editTitle = true;titleSpan.focus()">edit</mat-icon>
+        <mat-icon *ngIf="editTitle" (click)="editTitle = false;">save</mat-icon>
     </mat-card-title>
     <!-- <div>
         <mat-select [formControl]="toppings">
