@@ -1,4 +1,4 @@
-<mat-card class="example-card">
+<mat-card class="query-builder-input-wrapper">
     <mat-card-title>
         Query Builder
     </mat-card-title>
@@ -20,7 +20,7 @@
         </button>
     </mat-card-actions>
 </mat-card>
-<mat-card>
+<mat-card class="data-viewer" *ngIf="showTableView">
     <mat-card-title>Table Data</mat-card-title>
     <mat-card-content>
         <ng-container #tableView></ng-container>

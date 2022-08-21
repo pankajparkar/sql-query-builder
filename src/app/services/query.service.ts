@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, switchMap, takeUntil, timer } from 'rxjs';
 import { TableName } from '../enums/table-name.enum';
 import { Column } from '../models/column.model';
 import { TableData } from '../models/table-data.model';
@@ -35,7 +35,7 @@ export class QueryService {
   }
 
   getData(query: string): Observable<TableData> {
-    let apiCall;
+    let apiCall: Observable<any>;
     // TODO: simplified switch case by having simple if condition
     switch (query) {
       case TableName.Category:
@@ -70,7 +70,8 @@ export class QueryService {
           queryName: query,
         } as unknown as TableData);
     }
-    return apiCall.pipe(
+    return timer(5000).pipe(
+      switchMap(() => apiCall),
       map((data) => this.transforData(data, query)),
     );
   }

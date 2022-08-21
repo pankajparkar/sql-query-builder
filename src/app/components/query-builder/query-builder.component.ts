@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,9 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QueryService } from 'src/app/services/query.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { TableData } from 'src/app/models/table-data.model';
+import { finalize, startWith, Subject, takeUntil } from 'rxjs';
 import { QueryInputComponent } from '../core/query-input/query-input.component';
+import { TableComponent } from '../core/table/table.component';
 
 const imports = [
   CommonModule,
@@ -26,7 +26,7 @@ const imports = [
 
   // components
   QueryInputComponent,
-]
+];
 
 @Component({
   selector: 'sqb-query-builder',
@@ -39,24 +39,30 @@ export class QueryBuilderComponent {
 
   destroyed$ = new Subject<void>();
   sqlQuery = '';
-  tableData$: Observable<TableData> | undefined;
+  showTableView = false;
+  isLoading = false;
 
-  @ViewChild('tableView', { read: ViewContainerRef })
+  @ViewChild('tableView', { read: ViewContainerRef, static: false })
   tableView!: ViewContainerRef;
+  tableComponentRef: ComponentRef<TableComponent> | undefined;
 
   constructor(
     private query: QueryService,
   ) { }
 
-  async run() {
-    const tableComponent = await import('../core/table/table.component')
-      .then(i => i.TableComponent);
-    const tableCompRef = this.tableView.createComponent(tableComponent);
+  run() {
+    this.isLoading = true;
+    this.showTableView = true;
     this.query.getData(this.sqlQuery)
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(({ columns, data, query, queryName }) => {
-        tableCompRef.setInput('tableData', data);
-        tableCompRef.setInput('columns', columns);
+      .pipe(takeUntil(this.destroyed$), finalize(() => this.isLoading = false))
+      .subscribe(async ({ columns, data, query, queryName }) => {
+        if (!this.tableComponentRef) {
+          const tableComponent = await import('../core/table/table.component')
+            .then(i => i.TableComponent);
+          this.tableComponentRef = this.tableView.createComponent(tableComponent);
+        }
+        this.tableComponentRef.setInput('tableData', data);
+        this.tableComponentRef.setInput('columns', columns);
       });
   }
 

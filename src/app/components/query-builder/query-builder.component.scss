@@ -1,0 +1,13 @@
+:host {
+    padding: 20px;
+    display: block;
+    .data-viewer {
+        margin-top: 20px;
+    }
+    .query-builder-input-wrapper {
+        .mat-card-actions {
+            display: flex;
+            justify-content: end;
+        }
+    }
+}
