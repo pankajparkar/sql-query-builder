@@ -8,11 +8,11 @@ const INLINECODE = /`/g;
 export const EMOJI_STRATEGY: StrategyProps = {
     id: 'emoji',
     // match: /\B([\-+\w]*)$/,
-    match: /[a-z]/,
+    match: /([a-zA-Z]+)$/,
     search: async (term, callback) => {
         callback(await startsWith(term));
     },
-    replace: ([key]) => `:${key}: `,
+    replace: ([key]) => `${key} `,
     template: ([key, url]) => key,
     context: (text): boolean => {
         // const blockmatch = text.match(CODEBLOCK);

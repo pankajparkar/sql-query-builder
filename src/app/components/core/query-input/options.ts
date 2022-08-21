@@ -1,31 +1,18 @@
-let promise: Promise<[string, string][]> | null = null;
-
-const load = async (): Promise<[string, string][]> => {
-    if (promise == null) {
-        promise = new Promise<[string, string][]>(async (resolve) => {
-            const response = await fetch('https://api.github.com/emojis');
-            resolve(Object.entries(await response.json()));
-        });
-    }
-    return promise;
-};
+const suggestions: [string, string][] = [
+    ['Select', 'select'],
+    ['*', '*'],
+    ['FROM', 'from'],
+    ['Order', 'order'],
+]
 
 export const startsWith = async (
     term: string,
-    limit = 10
+    limit = 10,
 ): Promise<[string, string][]> => {
-    const kvs = await load();
     const results: [string, string][] = [];
-    // Whether previous key started with the term
-    let prevMatch = false;
-    for (const [key, url] of kvs) {
-        if (key.startsWith(term)) {
-            results.push([key, url]);
-            if (results.length === limit) break;
-            prevMatch = true;
-        } else if (prevMatch) {
-            break;
-        }
+    const matchedSuggestions = suggestions.filter(([key]) => key.toLowerCase().includes(term?.toLowerCase()));
+    if (matchedSuggestions.length) {
+        results.push(...matchedSuggestions);
     }
-    return [['Test', 'test']];
+    return matchedSuggestions;
 };

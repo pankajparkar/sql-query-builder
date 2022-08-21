@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, FormControl, FormsModule, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormsModule, NgControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 import { Textcomplete } from "@textcomplete/core";
@@ -19,49 +19,60 @@ import { EMOJI_STRATEGY } from './strategy';
     MatInputModule,
     FormsModule,
   ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: QueryInputComponent
+    }
+  ],
   templateUrl: './query-input.component.html',
   styleUrls: ['./query-input.component.scss']
 })
 export class QueryInputComponent implements ControlValueAccessor, OnDestroy {
-  @Input() sqlQuery!: string;
-
-  control!: FormControl;
-  destroyed = new Subject<void>();
+  private readonly destroyed$ = new Subject<void>();
+  control = new FormControl();
+  disabled = false;
 
   @ViewChild(MatInput) input!: MatInput;
 
+  onChange = (_: unknown) => { };
+  onTouched = () => { };
+
   constructor(
     private el: ElementRef,
-    @Optional() @Self() public ngControl: NgControl
-  ) {
-    if (this.ngControl) {
-      this.ngControl.valueAccessor = this;
-      this.control = this.ngControl.control as FormControl;
-      this.control.valueChanges
-        .pipe(takeUntil(this.destroyed))
-        .subscribe((x) => ngControl.viewToModelUpdate(x));
-    } else {
-      // Fallback in case FormControl haven't been passed
-      this.control = new FormControl();
-    }
+  ) { }
+
+  writeValue(value: string) {
+    this.control.setValue(value);
   }
 
-  registerOnChange(): void { }
+  registerOnChange(onChange: any) {
+    this.onChange = onChange;
+  }
 
-  registerOnTouched(): void { }
+  registerOnTouched(onTouched: any) {
+    this.onTouched = onTouched;
+  }
 
-  writeValue() { }
-
-  setDisabledState(): void { }
+  setDisabledState(disabled: boolean) {
+    this.disabled = disabled;
+  }
 
   ngAfterViewInit() {
     const input = this.el.nativeElement.querySelector('textarea');
     const editor = new TextareaEditor(input);
     const textcomplete = new Textcomplete(editor, [EMOJI_STRATEGY]);
+    this.control.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((x) => {
+        this.onChange(x);
+        this.onTouched();
+      });
   }
 
   ngOnDestroy() {
-    this.destroyed.next();
-    this.destroyed.complete();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
