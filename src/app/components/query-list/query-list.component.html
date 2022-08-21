@@ -1,1 +1,12 @@
-<h2>Query List</h2>
+<mat-card>
+    <mat-card-title>
+        Saved Query List
+    </mat-card-title>
+    <mat-card-content>
+        <mat-selection-list [multiple]="false">
+            <mat-list-option *ngFor="let query of queries" [routerLink]="['/query', query.id]">
+                {{query.name }}
+            </mat-list-option>
+        </mat-selection-list>
+    </mat-card-content>
+</mat-card>

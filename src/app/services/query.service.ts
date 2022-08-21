@@ -42,7 +42,7 @@ export class QueryService {
   }
 
   getQueryList() {
-    return this.storate.get(QUERIES);
+    return this.storate.get<SqlQuery[]>(QUERIES);
   }
 
   getQuery(id: string) {
