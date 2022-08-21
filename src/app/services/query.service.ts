@@ -5,6 +5,8 @@ import { TableName } from '../enums/table-name.enum';
 import { Column } from '../models/column.model';
 import { TableData } from '../models/table-data.model';
 
+const regex = /Select \* FROM ([a-zA-Z]+)/ig;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,9 +37,19 @@ export class QueryService {
   }
 
   getData(query: string): Observable<TableData> {
+    // const 
+    const matchGroupsGenerator = query.replace(/\s\s+/g, ' ')
+      .matchAll(regex);
+    let groups: any[] = [];
+    let current = matchGroupsGenerator.next();
+    while (!current.done) {
+      groups = groups.concat(current.value.filter(c => !c.toLowerCase().includes('from')));
+      current = matchGroupsGenerator.next();
+    }
+    const [first] = groups;
     let apiCall: Observable<any>;
     // TODO: simplified switch case by having simple if condition
-    switch (query) {
+    switch (first?.toLowerCase()) {
       case TableName.Category:
         apiCall = this.http.get('/assets/json/category.json');
         break;
