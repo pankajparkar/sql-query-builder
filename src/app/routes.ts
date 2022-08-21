@@ -1,13 +1,24 @@
 import { Routes } from "@angular/router";
-import { QueryEditComponent } from "./components/query-edit/query-edit.component";
-import { QueryListComponent } from "./components/query-list/query-list.component";
+import { DashboardComponent } from "./components/dashboard/dashboard.component";
 
 export const routes: Routes = [
     {
-        path: 'query-builder', children: [
-            { path: 'list', component: QueryListComponent },
-            { path: ':id', component: QueryEditComponent },
-            { path: '**', redirectTo: 'new' },
+        path: 'dashboard',
+        component: DashboardComponent,
+    },
+    {
+        path: 'query', children: [
+            {
+                path: 'list',
+                loadComponent: () => import('./components/query-list/query-list.component')
+                    .then(c => c.QueryListComponent),
+            },
+            {
+                path: ':id',
+                loadComponent: () => import('./components/query-edit/query-edit.component')
+                    .then(c => c.QueryEditComponent),
+            },
+            { path: '**', redirectTo: 'list' },
         ]
     },
     {
@@ -17,6 +28,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'query-builder',
+        redirectTo: 'dashboard',
     },
 ];

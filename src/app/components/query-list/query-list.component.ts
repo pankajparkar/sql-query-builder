@@ -11,7 +11,7 @@ import { QueryService } from 'src/app/services/query.service';
 })
 export class QueryListComponent implements OnInit {
 
-  queries = this.queryService.getList();
+  queries = this.queryService.getQueryList();
 
   constructor(
     private queryService: QueryService,

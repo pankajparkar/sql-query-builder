@@ -41,8 +41,13 @@ export class QueryService {
     } as unknown as TableData;
   }
 
-  getList() {
+  getQueryList() {
     return this.storate.get(QUERIES);
+  }
+
+  getQuery(id: string) {
+    const list = this.storate.get<SqlQuery[]>(QUERIES);
+    return list.find(i => i.id === id);
   }
 
   addList(newElement: SqlQuery) {

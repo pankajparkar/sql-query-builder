@@ -5,10 +5,10 @@
         </button>
     </mat-card-content>
 </mat-card>
-<mat-card class="query-builder-input-wrapper">
+<mat-card class="query-builder-input-wrapper" *ngIf="query">
     <mat-card-title>
         <span #titleSpan [attr.contenteditable]="editTitle">
-            {{ queryName }}
+            {{ query.name }}
         </span>
         <mat-icon *ngIf="!editTitle" (click)="editTitle = true;titleSpan.focus()">edit</mat-icon>
         <mat-icon *ngIf="editTitle" (click)="editTitle = false;">save</mat-icon>
@@ -19,7 +19,7 @@
         </mat-select>
     </div> -->
     <mat-card-content>
-        <sqb-query-input [(ngModel)]="sqlQuery"></sqb-query-input>
+        <sqb-query-input [(ngModel)]="query.rawQuery"></sqb-query-input>
     </mat-card-content>
     <mat-divider inset></mat-divider>
     <mat-card-actions>

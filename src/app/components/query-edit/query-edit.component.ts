@@ -14,7 +14,8 @@ import { QueryInputComponent } from '../core/query-input/query-input.component';
 import { TableComponent } from '../core/table/table.component';
 import { SqlQuery } from 'src/app/models/sql-query.model';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { QueryHelperService } from 'src/app/services/query-helper.service';
 
 const imports = [
   CommonModule,
@@ -42,13 +43,11 @@ const imports = [
 })
 export class QueryEditComponent implements OnInit, OnDestroy {
 
-  destroyed$ = new Subject<void>();
   showTableView = false;
-  sqlQuery = '';
+  query: SqlQuery | undefined;
   isLoading = false;
   editTitle = false;
-  id = (Math.random() * 1000).toFixed();
-  queryName = `Query ${this.id}`;
+  destroyed$ = new Subject<void>();
 
   @ViewChild('tableView', { read: ViewContainerRef, static: false })
   tableView!: ViewContainerRef;
@@ -56,12 +55,15 @@ export class QueryEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private queryService: QueryService,
+    private queryHelper: QueryHelperService,
+    private route: ActivatedRoute,
   ) { }
 
   run() {
+    if (!this.query) return;
     this.isLoading = true;
     this.showTableView = true;
-    this.queryService.getData(this.sqlQuery)
+    this.queryService.getData(this.query.rawQuery)
       .pipe(takeUntil(this.destroyed$), finalize(() => this.isLoading = false))
       .subscribe(async ({ columns, data, query, queryName }) => {
         if (!this.tableComponentRef) {
@@ -75,22 +77,16 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    const queryObj = {
-      id: this.id,
-      name: this.queryName,
-      rawQuery: this.sqlQuery,
-      details: {
-        columns: [],
-        isJoinQuery: false,
-        tables: [],
-      }
-    } as SqlQuery;
-    console.log(queryObj);
-    this.queryService.addList(queryObj);
+    this.queryService.addList(this.query!);
   }
 
   ngOnInit() {
-
+    const id = this.route.snapshot.params['id'];
+    if (id && id !== 'new') {
+      this.query = this.queryService.getQuery(id);
+    } else {
+      this.query = this.queryHelper.createNew();
+    }
   }
 
   ngOnDestroy() {
