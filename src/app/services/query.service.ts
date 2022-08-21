@@ -3,9 +3,13 @@ import { Injectable } from '@angular/core';
 import { map, Observable, of, switchMap, takeUntil, timer } from 'rxjs';
 import { TableName } from '../enums/table-name.enum';
 import { Column } from '../models/column.model';
+import { SqlQuery } from '../models/query.model';
 import { TableData } from '../models/table-data.model';
+import { StorageService } from './storage.service';
 
 const regex = /Select \* FROM ([a-zA-Z]+)/ig;
+
+const QUERIES = 'queries';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +18,7 @@ export class QueryService {
 
   constructor(
     private http: HttpClient,
+    private storate: StorageService,
   ) { }
 
   private transforData = (data: any, query: string) => {
@@ -34,6 +39,16 @@ export class QueryService {
       query,
       queryName: query,
     } as unknown as TableData;
+  }
+
+  getList() {
+    return this.storate.get(QUERIES);
+  }
+
+  addList(newElement: SqlQuery) {
+    const list = this.storate.get<SqlQuery[]>(QUERIES) ?? [];
+    list.push(newElement);
+    this.storate.set(QUERIES, list);
   }
 
   getData(query: string): Observable<TableData> {

@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Query, ViewChild, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,7 @@ import { QueryService } from 'src/app/services/query.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { QueryInputComponent } from '../core/query-input/query-input.component';
 import { TableComponent } from '../core/table/table.component';
+import { SqlQuery } from 'src/app/models/query.model';
 
 const imports = [
   CommonModule,
@@ -47,13 +48,13 @@ export class QueryEditComponent {
   tableComponentRef: ComponentRef<TableComponent> | undefined;
 
   constructor(
-    private query: QueryService,
+    private queryService: QueryService,
   ) { }
 
   run() {
     this.isLoading = true;
     this.showTableView = true;
-    this.query.getData(this.sqlQuery)
+    this.queryService.getData(this.sqlQuery)
       .pipe(takeUntil(this.destroyed$), finalize(() => this.isLoading = false))
       .subscribe(async ({ columns, data, query, queryName }) => {
         if (!this.tableComponentRef) {
@@ -66,7 +67,19 @@ export class QueryEditComponent {
       });
   }
 
-  save() { }
+  save() {
+    const queryObj = {
+      name: '',
+      rawQuery: this.sqlQuery,
+      details: {
+        columns: [],
+        isJoinQuery: false,
+        tables: [],
+      }
+    } as SqlQuery;
+    console.log(queryObj);
+    this.queryService.addList(queryObj);
+  }
 
   compose() { }
 

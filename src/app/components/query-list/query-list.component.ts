@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { QueryService } from 'src/app/services/query.service';
 
 @Component({
   selector: 'sqb-query-list',
@@ -10,7 +11,11 @@ import { CommonModule } from '@angular/common';
 })
 export class QueryListComponent implements OnInit {
 
-  constructor() { }
+  queries = this.queryService.getList();
+
+  constructor(
+    private queryService: QueryService,
+  ) { }
 
   ngOnInit(): void {
   }

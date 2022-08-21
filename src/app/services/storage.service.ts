@@ -7,8 +7,8 @@ export class StorageService {
 
   constructor() { }
 
-  private getJSON(key: string) {
-    return JSON.parse(localStorage.getItem(key) ?? '{}');
+  private getJSON<T>(key: string, defaultReturn = '{}') {
+    return JSON.parse(localStorage.getItem(key) ?? defaultReturn);
   }
 
   get<T>(key: string) {
@@ -29,13 +29,13 @@ export class StorageService {
     }
   }
 
-  getByProperty<T>(key: string, prop: string) {
-    const result = this.getJSON(key);
+  getByProperty<T>(key: string, prop: string, defaultReturn = '{}') {
+    const result = this.getJSON(key, defaultReturn);
     return result[prop] as T;
   }
 
-  setByProperty(key: string, prop: string, propValue: unknown) {
-    const result = this.getJSON(key);
+  setByProperty(key: string, prop: string, propValue: unknown, defaultReturn = '{}') {
+    const result = this.getJSON(key, defaultReturn);
     result[prop] = propValue ?? '';
     this.set(key, result);
   }
