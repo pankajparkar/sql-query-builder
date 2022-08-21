@@ -8,5 +8,9 @@
                 {{query.name }}
             </mat-list-option>
         </mat-selection-list>
+        <div *ngIf="!queries?.length" class="no-results">
+            No queries added yet
+            <a routerLink="/query/new">Click here</a> to compose a new Query.
+        </div>
     </mat-card-content>
 </mat-card>

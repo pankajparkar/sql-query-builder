@@ -6,15 +6,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { QueryService } from 'src/app/services/query.service';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { QueryService } from 'src/app/services/query.service';
 import { QueryInputComponent } from '../core/query-input/query-input.component';
 import { TableComponent } from '../core/table/table.component';
 import { SqlQuery } from 'src/app/models/sql-query.model';
-import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute, RouterModule } from '@angular/router';
 import { QueryHelperService } from 'src/app/services/query-helper.service';
 
 const imports = [
@@ -32,6 +33,7 @@ const imports = [
   // components
   QueryInputComponent,
   RouterModule,
+  MatSnackBarModule,
 ];
 
 @Component({
@@ -57,6 +59,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     private queryService: QueryService,
     private queryHelper: QueryHelperService,
     private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
   ) { }
 
   run() {
@@ -78,6 +81,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
 
   save() {
     this.queryService.addList(this.query!);
+    this.snackbar.open('Saved successfully');
   }
 
   ngOnInit() {

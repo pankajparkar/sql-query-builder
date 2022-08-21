@@ -1,4 +1,9 @@
 :host {
     display: block;
     padding: 20px;
+    .no-results {
+        background: #f9dfdf;
+        border-radius: 5px;
+        padding: 20px 10px;
+    }
 }
