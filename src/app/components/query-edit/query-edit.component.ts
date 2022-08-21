@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -50,6 +50,8 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   isLoading = false;
   editTitle = false;
   destroyed$ = new Subject<void>();
+  queryList = this.queryService.getQueryList() ?? [];
+  selectedQuery = new FormControl<number | undefined>(undefined);
 
   @ViewChild('tableView', { read: ViewContainerRef, static: false })
   tableView!: ViewContainerRef;

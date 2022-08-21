@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-content>
-        <button mat-raised-button color="secondary" [routerLink]="'/query-builder'">
+        <button mat-raised-button color="secondary" [routerLink]="'/query/new'">
             Compose New Query
         </button>
     </mat-card-content>
@@ -13,11 +13,13 @@
         <mat-icon *ngIf="!editTitle" (click)="editTitle = true;titleSpan.focus()">edit</mat-icon>
         <mat-icon *ngIf="editTitle" (click)="editTitle = false;">save</mat-icon>
     </mat-card-title>
-    <!-- <div>
-        <mat-select [formControl]="toppings">
-            <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+    <div>
+        <mat-select [formControl]="selectedQuery">
+            <mat-option *ngFor="let query of queryList" [value]="query.id">
+                {{query.name}}
+            </mat-option>
         </mat-select>
-    </div> -->
+    </div>
     <mat-card-content>
         <sqb-query-input [(ngModel)]="query.rawQuery"></sqb-query-input>
     </mat-card-content>
