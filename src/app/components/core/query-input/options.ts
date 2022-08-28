@@ -3,6 +3,13 @@ const suggestions: [string, string][] = [
     ['*', '*'],
     ['FROM', 'from'],
     ['Order', 'order'],
+    ['Category', 'category'],
+    ['Customer', 'customer'],
+    ['Employee', 'employee'],
+    ['Product', 'product'],
+    ['Region', 'region'],
+    ['shipper', 'shipper'],
+    ['Supplier', 'supplier'],
 ]
 
 export const startsWith = async (
