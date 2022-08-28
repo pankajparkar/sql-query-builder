@@ -65,20 +65,24 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     private location: Location,
   ) { }
 
-  run() {
+  async run() {
     if (!this.query) return;
     this.isLoading = true;
     this.showTableView = true;
+    if (!this.tableComponentRef) {
+      const tableComponent = await import('../core/table/table.component')
+        .then(i => i.TableComponent);
+      this.tableComponentRef = this.tableView.createComponent(tableComponent);
+      this.tableComponentRef?.setInput('isLoading', this.isLoading);
+    }
     this.queryService.getData(this.query.rawQuery)
-      .pipe(takeUntil(this.destroyed$), finalize(() => this.isLoading = false))
-      .subscribe(async ({ columns, data, query, queryName }) => {
-        if (!this.tableComponentRef) {
-          const tableComponent = await import('../core/table/table.component')
-            .then(i => i.TableComponent);
-          this.tableComponentRef = this.tableView.createComponent(tableComponent);
-        }
-        this.tableComponentRef.setInput('tableData', data);
-        this.tableComponentRef.setInput('columns', columns);
+      .pipe(
+        takeUntil(this.destroyed$),
+        finalize(() => this.isLoading = false))
+      .subscribe(({ columns, data, query, queryName }) => {
+        this.tableComponentRef?.setInput('tableData', data);
+        this.tableComponentRef?.setInput('columns', columns);
+        this.tableComponentRef?.setInput('isLoading', this.isLoading);
       });
   }
 

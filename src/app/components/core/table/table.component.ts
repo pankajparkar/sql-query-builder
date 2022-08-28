@@ -4,11 +4,13 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Column } from 'src/app/models/column.model';
+import { LoadingComponent } from '../loading/loading.component';
 
 const imports = [
   CommonModule,
   MatTableModule,
   MatPaginatorModule,
+  LoadingComponent,
 ];
 
 @Component({
@@ -25,6 +27,8 @@ export class TableComponent implements AfterViewInit {
   tableData: any[] = [];
   @Input()
   columns: Column[] = [];
+  @Input()
+  isLoading: boolean = false;
 
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource();
 
