@@ -1,12 +1,12 @@
-table {
-    overflow-x: scroll;
-}
-
 .mat-form-field {
     font-size: 14px;
     width: 100%;
 }
 
-td, th {
-    width: 25%;
+.table-wrapper {
+    height: 500px;
+
+    ag-grid-angular {
+        height: 100%;
+    }
 }
