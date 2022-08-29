@@ -17,6 +17,7 @@ import { QueryInputComponent } from '../core/query-input/query-input.component';
 import { TableComponent } from '../core/table/table.component';
 import { SqlQuery } from 'src/app/models/sql-query.model';
 import { QueryHelperService } from 'src/app/services/query-helper.service';
+import { ListenToRouteDirective } from 'src/app/directives/listen-to-route.directive';
 
 const imports = [
   CommonModule,
@@ -29,11 +30,12 @@ const imports = [
   MatSelectModule,
   MatInputModule,
   MatIconModule,
+  RouterModule,
+  MatSnackBarModule,
 
   // components
   QueryInputComponent,
-  RouterModule,
-  MatSnackBarModule,
+  ListenToRouteDirective,
 ];
 
 @Component({
@@ -126,13 +128,8 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   }
 
   listenToRoute() {
-    this.route.params.pipe(
-      takeUntil(this.destroyed$),
-      filter(p => p['id'] === 'new')
-    ).subscribe(() => {
-      this.clearFields();
-      this.query = this.queryHelper.createNew();
-    })
+    this.clearFields();
+    this.query = this.queryHelper.createNew();
   }
 
   ngOnInit() {
@@ -142,7 +139,6 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     } else {
       this.query = this.queryHelper.createNew();
     }
-    this.listenToRoute();
   }
 
   ngOnDestroy() {

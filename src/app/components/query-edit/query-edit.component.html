@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card sqbListenToRoute="new" routeParam="id" (listen)="listenToRoute()">
     <mat-card-content>
         <button mat-raised-button color="secondary" (click)="onNewQuery()">
             Compose New Query
