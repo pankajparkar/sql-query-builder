@@ -110,6 +110,8 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.tableComponentRef = undefined;
+    this.tableView.clear();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
