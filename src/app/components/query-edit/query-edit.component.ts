@@ -52,6 +52,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   destroyed$ = new Subject<void>();
   queryList = this.queryService.getQueryList() ?? [];
   selectedQuery = new FormControl<number | undefined>(undefined);
+  searchText = '';
 
   @ViewChild('tableView', { read: ViewContainerRef, static: false })
   tableView!: ViewContainerRef;
@@ -69,9 +70,9 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     if (!this.query) return;
     this.isLoading = true;
     this.showTableView = true;
-    const tableComponent = await import('../core/table/table.component')
-      .then(i => i.TableComponent);
     if (!this.tableComponentRef) {
+      const tableComponent = await import('../core/table/table.component')
+        .then(i => i.TableComponent);
       this.tableComponentRef = this.tableView.createComponent(tableComponent);
     }
     this.tableComponentRef?.setInput('isLoading', this.isLoading);
@@ -86,6 +87,10 @@ export class QueryEditComponent implements OnInit, OnDestroy {
         this.tableComponentRef?.setInput('tableData', data);
         this.tableComponentRef?.setInput('columns', columns);
       });
+  }
+
+  updateSearchText() {
+    this.tableComponentRef?.setInput('searchText', this.searchText);
   }
 
   save() {

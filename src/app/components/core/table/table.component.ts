@@ -22,7 +22,6 @@ const imports = [
 export class TableComponent implements OnChanges {
 
   private gridApi: GridApi<any> | undefined;
-  private columnApi: ColumnApi | undefined;
 
   displayedColumns: ColDef[] = [];
   @Input()
@@ -31,6 +30,8 @@ export class TableComponent implements OnChanges {
   columns: Column[] = [];
   @Input()
   isLoading: boolean = false;
+  @Input()
+  searchText: string = '';
 
   constructor(
     @Inject(DOCUMENT) private document: Document
@@ -48,40 +49,44 @@ export class TableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     const columns = changes['columns'];
     const isLoading = changes['isLoading'];
-    const tableData = changes['tableData'];
+    const searchText = changes['searchText'];
     if (this.simpleChangeCheck(columns)) {
       this.displayedColumns = this.columns.map(col => ({
-        headerName: col.displayName, field: col.colName, sortable: true, filter: true, resizable: true,
+        headerName: col.displayName,
+        field: col.colName,
+        sortable: true,
+        filter: true,
+        flex: 1,
+        valueFormatter: col.isJson ? (d) => d.value && JSON.stringify(d.value) : undefined,
       }));
     }
     if (this.simpleChangeCheck(isLoading)) {
       if (this.isLoading) {
-        this.gridApi?.hideOverlay();
-        this.gridApi?.showLoadingOverlay();
+        this.showLoading();
       } else {
         this.gridApi?.hideOverlay();
       }
     }
-    if (this.simpleChangeCheck(tableData)) {
-      setTimeout(() => this.setAutosize());
-      // this.gridApi?.sizeColumnsToFit();
-      // columnApi.autoSizeAllColumns();
-      // this.gridApi?.autoSizeColumns(allColumnIds, skipHeader);
+    if (this.simpleChangeCheck(searchText)) {
+      this.onFilterTextBoxChanged();
     }
   }
 
-  setAutosize() {
-    if (this.columnApi) {
-      const colIds = this.columnApi?.getAllColumns()!.map(
-        (c: any) => c.colId
-      );
-      this.columnApi?.autoSizeColumns(colIds)
+
+  private onFilterTextBoxChanged() {
+    this.gridApi?.setQuickFilter(this.searchText);
+  }
+
+  showLoading() {
+    if (this.gridApi) {
+      this.gridApi.hideOverlay();
+      this.gridApi.showLoadingOverlay();
     }
   }
+
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
-    this.columnApi = params.columnApi;
-    console.log(this.gridApi)
+    this.showLoading();
   }
 
 }

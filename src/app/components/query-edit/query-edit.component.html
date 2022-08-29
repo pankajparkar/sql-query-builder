@@ -36,6 +36,10 @@
 <mat-card class="data-viewer" [ngClass]="{hide: !showTableView}">
     <mat-card-title>Table Data</mat-card-title>
     <mat-card-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Search Text</mat-label>
+            <input matInput [(ngModel)]="searchText" placeholder="Enter search text here" (input)="updateSearchText()">
+        </mat-form-field>
         <ng-container #tableView></ng-container>
     </mat-card-content>
 </mat-card>

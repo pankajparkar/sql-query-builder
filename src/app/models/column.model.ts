@@ -4,4 +4,5 @@ export interface Column {
     filtering: boolean;
     displayName: string;
     hidden: boolean;
+    isJson: boolean;
 }

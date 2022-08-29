@@ -8,6 +8,8 @@ import { TableData } from '../models/table-data.model';
 import { StorageService } from './storage.service';
 
 const regex = /Select \* FROM ([a-zA-Z]+)/ig;
+const arrayConstructor = [].constructor;
+const objectConstructor = ({}).constructor;
 
 const QUERIES = 'queries';
 
@@ -31,6 +33,7 @@ export class QueryService {
         filtering: false,
         hidden: false,
         sorting: false,
+        isJson: this.isJson(firstRow[col])
       }));
     }
     return {
@@ -39,6 +42,10 @@ export class QueryService {
       query,
       queryName: query,
     } as unknown as TableData;
+  }
+
+  private isJson(object: any) {
+    return [arrayConstructor, objectConstructor].includes(object?.constructor);
   }
 
   getQueryList() {
