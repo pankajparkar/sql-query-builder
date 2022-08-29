@@ -7,6 +7,7 @@ import { environment } from './environments/environment';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 
 if (environment.production) {
   enableProdMode();
@@ -14,6 +15,10 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { duration: 3000 }
+    },
     importProvidersFrom([
       [
         RouterModule.forRoot(routes, {
