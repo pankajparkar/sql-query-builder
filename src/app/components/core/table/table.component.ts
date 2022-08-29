@@ -1,7 +1,7 @@
-import { Component, Inject, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, ElementRef, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, ColumnApi, GridApi, GridReadyEvent, } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, } from 'ag-grid-community';
 
 import { Column } from 'src/app/models/column.model';
 import { LoadingComponent } from '../loading/loading.component';
@@ -34,7 +34,7 @@ export class TableComponent implements OnChanges {
   searchText: string = '';
 
   constructor(
-    @Inject(DOCUMENT) private document: Document
+    private el: ElementRef,
   ) { }
 
   private simpleChangeCheck(change: SimpleChange) {
@@ -50,6 +50,7 @@ export class TableComponent implements OnChanges {
     const columns = changes['columns'];
     const isLoading = changes['isLoading'];
     const searchText = changes['searchText'];
+    const tableData = changes['tableData'];
     if (this.simpleChangeCheck(columns)) {
       this.displayedColumns = this.columns.map(col => ({
         headerName: col.displayName,
@@ -70,8 +71,10 @@ export class TableComponent implements OnChanges {
     if (this.simpleChangeCheck(searchText)) {
       this.onFilterTextBoxChanged();
     }
+    if (this.simpleChangeCheck(tableData)) {
+      this.el.nativeElement.scrollIntoView();
+    }
   }
-
 
   private onFilterTextBoxChanged() {
     this.gridApi?.setQuickFilter(this.searchText);
@@ -86,6 +89,7 @@ export class TableComponent implements OnChanges {
 
   onGridReady(params: GridReadyEvent<any>) {
     this.gridApi = params.api;
+    console.log(this.gridApi);
     this.showLoading();
   }
 
