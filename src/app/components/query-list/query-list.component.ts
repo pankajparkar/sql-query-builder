@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QueryService } from 'src/app/services/query.service';
 
@@ -20,15 +20,12 @@ const imports = [
   templateUrl: './query-list.component.html',
   styleUrls: ['./query-list.component.scss']
 })
-export class QueryListComponent implements OnInit {
+export class QueryListComponent {
 
   queries = this.queryService.getQueryList();
 
   constructor(
     private queryService: QueryService,
   ) { }
-
-  ngOnInit(): void {
-  }
 
 }

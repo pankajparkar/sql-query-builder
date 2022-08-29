@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, FormControl, FormsModule, NgControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -29,7 +29,7 @@ import { EMOJI_STRATEGY } from './strategy';
   templateUrl: './query-input.component.html',
   styleUrls: ['./query-input.component.scss']
 })
-export class QueryInputComponent implements ControlValueAccessor, OnDestroy {
+export class QueryInputComponent implements ControlValueAccessor, OnDestroy, AfterViewInit {
   private readonly destroyed$ = new Subject<void>();
   control = new FormControl();
   disabled = false;

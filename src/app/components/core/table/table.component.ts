@@ -9,7 +9,6 @@ import { convertColumns } from '../../../utils/table.utils';
 const imports = [
   CommonModule,
   AgGridModule,
-  LoadingComponent,
 ];
 
 @Component({

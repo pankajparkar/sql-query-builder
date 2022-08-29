@@ -15,17 +15,6 @@ export const EMOJI_STRATEGY: StrategyProps = {
     replace: ([key]) => `${key} `,
     template: ([key, url]) => key,
     context: (text): boolean => {
-        // const blockmatch = text.match(CODEBLOCK);
-        // if (blockmatch && blockmatch.length % 2) {
-        //     // Cursor is in a code block
-        //     return false;
-        // }
-        // const inlinematch = text.match(INLINECODE);
-        // if (inlinematch && inlinematch.length % 2) {
-        //     // Cursor is in a inline code
-        //     return false;
-        // }
-        // return true;
         return true;
     },
 };

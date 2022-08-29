@@ -1,4 +1,4 @@
-import { Component, ComponentRef, OnDestroy, OnInit, Query, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
