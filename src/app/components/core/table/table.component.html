@@ -1,6 +1,6 @@
 <div class="mat-elevation-z8 table-wrapper">
     <ag-grid-angular class="ag-theme-alpine" [overlayLoadingTemplate]="overlayLoadingTemplate"
         (gridReady)="onGridReady($event)" [overlayNoRowsTemplate]="overlayNoRowsTemplate" [rowData]="tableData"
-        [columnDefs]="displayedColumns">
+        [columnDefs]="displayedColumns" [gridOptions]="gridOptions">
     </ag-grid-angular>
 </div>

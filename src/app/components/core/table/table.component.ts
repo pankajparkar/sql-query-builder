@@ -33,6 +33,11 @@ export class TableComponent implements OnChanges {
   @Input()
   searchText: string = '';
 
+  gridOptions = {
+    pagination: true,
+    paginationPageSize: 10000,
+  };
+
   constructor(
     private el: ElementRef,
   ) { }

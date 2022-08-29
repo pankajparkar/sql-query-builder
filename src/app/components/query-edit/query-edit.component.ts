@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { filter, finalize, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -57,6 +57,15 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   @ViewChild('tableView', { read: ViewContainerRef, static: false })
   tableView!: ViewContainerRef;
   tableComponentRef: ComponentRef<TableComponent> | undefined;
+
+  clearFields() {
+    this.isLoading = false;
+    this.editTitle = false;
+    this.showTableView = false;
+    this.query = undefined
+    this.searchText = '';
+    this.selectedQuery.setValue(null);
+  }
 
   constructor(
     private queryService: QueryService,
@@ -116,6 +125,16 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     this.selectedQuery.setValue(id);
   }
 
+  listenToRoute() {
+    this.route.params.pipe(
+      takeUntil(this.destroyed$),
+      filter(p => p['id'] === 'new')
+    ).subscribe(() => {
+      this.clearFields();
+      this.query = this.queryHelper.createNew();
+    })
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.params['id'];
     if (id && id !== 'new') {
@@ -123,6 +142,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     } else {
       this.query = this.queryHelper.createNew();
     }
+    this.listenToRoute();
   }
 
   ngOnDestroy() {
