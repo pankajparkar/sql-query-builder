@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -64,6 +64,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private location: Location,
+    private router: Router,
   ) { }
 
   async run() {
@@ -93,6 +94,11 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     this.tableComponentRef?.setInput('searchText', this.searchText);
   }
 
+  onNewQuery() {
+    this.router.navigate(['query/new']);
+    this.snackbar.open('New query opened.');
+  }
+
   save() {
     const { update, added } = this.queryService.saveQuery(this.query!);
     if (added) {
@@ -105,10 +111,15 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  onQueryChange(id: number) {
+    this.query = this.queryService.getQuery(id.toString());
+    this.selectedQuery.setValue(id);
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.params['id'];
     if (id && id !== 'new') {
-      this.query = this.queryService.getQuery(id);
+      this.onQueryChange(id);
     } else {
       this.query = this.queryHelper.createNew();
     }

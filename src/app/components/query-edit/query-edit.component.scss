@@ -13,4 +13,8 @@
     .hide {
         display: none;
     }
+    .query-controls {
+        display: flex;
+        justify-content: space-between;
+    }
 }

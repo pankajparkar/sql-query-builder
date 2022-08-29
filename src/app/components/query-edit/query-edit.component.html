@@ -1,26 +1,33 @@
 <mat-card>
     <mat-card-content>
-        <button mat-raised-button color="secondary" [routerLink]="'/query/new'">
+        <button mat-raised-button color="secondary" (click)="onNewQuery()">
             Compose New Query
         </button>
     </mat-card-content>
 </mat-card>
 <mat-card class="query-builder-input-wrapper" *ngIf="query">
-    <mat-card-title>
-        <span #titleSpan [attr.contenteditable]="editTitle">
-            {{ query.name }}
-        </span>
-        <mat-icon *ngIf="!editTitle" (click)="editTitle = true;titleSpan.focus()">edit</mat-icon>
-        <mat-icon *ngIf="editTitle" (click)="editTitle = false;">save</mat-icon>
-    </mat-card-title>
-    <div>
-        <mat-select [formControl]="selectedQuery">
-            <mat-option *ngFor="let query of queryList" [value]="query.id">
-                {{query.name}}
-            </mat-option>
-        </mat-select>
-    </div>
     <mat-card-content>
+        <div class="query-controls">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Query Name</mat-label>
+                <input type="text" matInput placeholder="Enter query name" [(ngModel)]="query.name" required
+                    [disabled]="!editTitle">
+                <mat-icon *ngIf="!editTitle" (click)="editTitle = true;" matSuffix>
+                    edit
+                </mat-icon>
+                <mat-icon *ngIf="editTitle" (click)="editTitle = false;" matSuffix>
+                    save
+                </mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Select existing query here</mat-label>
+                <mat-select [formControl]="selectedQuery" (selectionChange)="onQueryChange(selectedQuery?.value!)">
+                    <mat-option *ngFor="let query of queryList" [value]="query.id">
+                        {{query.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <sqb-query-input [(ngModel)]="query.rawQuery"></sqb-query-input>
     </mat-card-content>
     <mat-divider inset></mat-divider>
