@@ -120,8 +120,8 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onQueryChange(id: number) {
-    this.query = this.queryService.getQuery(id.toString());
+  onQueryChange(id: number | undefined | null) {
+    this.query = this.queryService.getQuery((id || '').toString());
     this.selectedQuery.setValue(id);
   }
 

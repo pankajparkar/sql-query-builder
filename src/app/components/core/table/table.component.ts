@@ -4,7 +4,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ColDef, GridApi, GridReadyEvent, } from 'ag-grid-community';
 
 import { Column } from 'src/app/models/column.model';
-import { LoadingComponent } from '../loading/loading.component';
+import { convertColumns } from '../../../utils/table.utils';
 
 const imports = [
   CommonModule,
@@ -57,14 +57,7 @@ export class TableComponent implements OnChanges {
     const searchText = changes['searchText'];
     const tableData = changes['tableData'];
     if (this.simpleChangeCheck(columns)) {
-      this.displayedColumns = this.columns.map(col => ({
-        headerName: col.displayName,
-        field: col.colName,
-        sortable: true,
-        filter: true,
-        flex: 1,
-        valueFormatter: col.isJson ? (d) => d.value && JSON.stringify(d.value) : undefined,
-      }));
+      this.displayedColumns = convertColumns(columns.currentValue ?? []);
     }
     if (this.simpleChangeCheck(isLoading)) {
       if (this.isLoading) {

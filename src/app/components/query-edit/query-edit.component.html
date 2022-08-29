@@ -19,9 +19,9 @@
                     save
                 </mat-icon>
             </mat-form-field>
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" *ngIf="queryList?.length">
                 <mat-label>Select existing query here</mat-label>
-                <mat-select [formControl]="selectedQuery" (selectionChange)="onQueryChange(selectedQuery?.value!)">
+                <mat-select [formControl]="selectedQuery" (selectionChange)="onQueryChange(selectedQuery.value)">
                     <mat-option *ngFor="let query of queryList" [value]="query.id" [routerLink]="['/query', query.id]">
                         {{query.name}}
                     </mat-option>

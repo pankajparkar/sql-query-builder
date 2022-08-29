@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of, switchMap, takeUntil, timer } from 'rxjs';
+import { createColumns } from '../utils/table.utils';
 import { TableName } from '../enums/table-name.enum';
 import { Column } from '../models/column.model';
 import { SqlQuery } from '../models/sql-query.model';
@@ -8,9 +9,6 @@ import { TableData } from '../models/table-data.model';
 import { StorageService } from './storage.service';
 
 const regex = /Select \* FROM ([a-zA-Z]+)/ig;
-const arrayConstructor = [].constructor;
-const objectConstructor = ({}).constructor;
-
 const QUERIES = 'queries';
 
 @Injectable({
@@ -27,14 +25,7 @@ export class QueryService {
     let columns = [] as Column[];
     const [firstRow] = data ?? [];
     if (firstRow) {
-      columns = Object.keys(firstRow).map((col) => ({
-        colName: col,
-        displayName: col,
-        filtering: false,
-        hidden: false,
-        sorting: false,
-        isJson: this.isJson(firstRow[col])
-      }));
+      columns = createColumns(firstRow);
     }
     return {
       columns,
@@ -44,9 +35,6 @@ export class QueryService {
     } as unknown as TableData;
   }
 
-  private isJson(object: any) {
-    return [arrayConstructor, objectConstructor].includes(object?.constructor);
-  }
 
   getQueryList() {
     return this.storate.get<SqlQuery[]>(QUERIES);
