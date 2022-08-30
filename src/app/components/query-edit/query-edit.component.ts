@@ -7,10 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { filter, finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { QueryService } from 'src/app/services/query.service';
 import { QueryInputComponent } from '../core/query-input/query-input.component';
@@ -18,6 +19,7 @@ import { TableComponent } from '../core/table/table.component';
 import { SqlQuery } from 'src/app/models/sql-query.model';
 import { QueryHelperService } from 'src/app/services/query-helper.service';
 import { ListenToRouteDirective } from 'src/app/directives/listen-to-route.directive';
+import { QueryBuilderComponent } from '../core/query-builder/query-builder.component';
 
 const imports = [
   CommonModule,
@@ -32,10 +34,12 @@ const imports = [
   MatIconModule,
   RouterModule,
   MatSnackBarModule,
+  MatExpansionModule,
 
   // components
   QueryInputComponent,
   ListenToRouteDirective,
+  QueryBuilderComponent,
 ];
 
 @Component({
@@ -49,11 +53,11 @@ export class QueryEditComponent implements OnInit, OnDestroy {
 
   showTableView = false;
   query: SqlQuery | undefined;
+  panelOpenState = true;
   isLoading = false;
-  editTitle = false;
   destroyed$ = new Subject<void>();
   queryList = this.queryService.getQueryList() ?? [];
-  selectedQuery = new FormControl<number | undefined>(undefined);
+  selectedQuery: string | undefined | null;
   searchText = '';
 
   @ViewChild('tableView', { read: ViewContainerRef, static: false })
@@ -62,11 +66,10 @@ export class QueryEditComponent implements OnInit, OnDestroy {
 
   clearFields() {
     this.isLoading = false;
-    this.editTitle = false;
     this.showTableView = false;
     this.query = undefined
     this.searchText = '';
-    this.selectedQuery.setValue(null);
+    this.selectedQuery = undefined;
   }
 
   constructor(
@@ -79,7 +82,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   ) { }
 
   async run() {
-    if (!this.query) return;
+    if (!this.query?.rawQuery) return;
     this.isLoading = true;
     this.showTableView = true;
     if (!this.tableComponentRef) {
@@ -111,6 +114,7 @@ export class QueryEditComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    if (!this.query?.rawQuery) return;
     const { update, added } = this.queryService.saveQuery(this.query!);
     if (added) {
       this.location.replaceState(`/query/${this.query?.id}`);
@@ -122,9 +126,9 @@ export class QueryEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onQueryChange(id: number | undefined | null) {
+  onQueryChange(id: string | undefined | null) {
     this.query = this.queryService.getQuery((id || '').toString());
-    this.selectedQuery.setValue(id);
+    this.selectedQuery = id;
   }
 
   listenToRoute() {

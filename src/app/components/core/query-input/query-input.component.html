@@ -1,4 +1,7 @@
 <mat-form-field appearance="fill">
     <mat-label>Enter SQL query</mat-label>
     <textarea matInput [formControl]="control" placeholder="Enter SQL query like 'Select * from orders'"></textarea>
+    <mat-error>
+        Please enter SQL query
+    </mat-error>
 </mat-form-field>

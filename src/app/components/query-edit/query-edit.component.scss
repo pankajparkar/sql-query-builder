@@ -4,17 +4,11 @@
     mat-card {
         margin-top: 20px;
     }
-    .query-builder-input-wrapper {
-        .mat-card-actions {
-            display: flex;
-            justify-content: flex-end;
-        }
-    }
     .hide {
         display: none;
     }
-    .query-controls {
-        display: flex;
-        justify-content: space-between;
-    }
+}
+
+mat-card {
+    margin-bottom: 20px;
 }

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, FormControl, FormsModule, NgControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormsModule, NgControl, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
 import { Textcomplete } from "@textcomplete/core";
@@ -27,11 +27,12 @@ import { EMOJI_STRATEGY } from './strategy';
     }
   ],
   templateUrl: './query-input.component.html',
-  styleUrls: ['./query-input.component.scss']
+  styleUrls: ['./query-input.component.scss'],
+  exportAs: 'sqbQueryInput'
 })
 export class QueryInputComponent implements ControlValueAccessor, OnDestroy, AfterViewInit {
   private readonly destroyed$ = new Subject<void>();
-  control = new FormControl();
+  control = new FormControl('', [Validators.required]);
   disabled = false;
 
   @ViewChild(MatInput) input!: MatInput;

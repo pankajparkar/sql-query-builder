@@ -1,0 +1,35 @@
+<mat-card class="query-builder-input-wrapper mat-elevation-z0" *ngIf="query">
+    <mat-card-content>
+        <div class="query-controls">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Query Name</mat-label>
+                <input type="text" matInput placeholder="Enter query name" [(ngModel)]="query.name" required
+                    [disabled]="!editTitle">
+                <mat-icon *ngIf="!editTitle" (click)="editTitle = true;" matSuffix>
+                    edit
+                </mat-icon>
+                <mat-icon *ngIf="editTitle" (click)="editTitle = false;" matSuffix>
+                    save
+                </mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="queryList?.length">
+                <mat-label>Select existing query here</mat-label>
+                <mat-select [(ngModel)]="selectedQuery" (selectionChange)="queryChange.emit(selectedQuery!)">
+                    <mat-option *ngFor="let query of queryList" [value]="query.id" [routerLink]="['/query', query.id]">
+                        {{query.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <sqb-query-input #queryInput="sqbQueryInput" [(ngModel)]="query.rawQuery"></sqb-query-input>
+    </mat-card-content>
+    <mat-divider inset></mat-divider>
+    <mat-card-actions>
+        <button mat-raised-button color="secondary" (click)="save.emit();queryInput.control.markAsTouched();">
+            Save
+        </button>
+        <button mat-raised-button color="primary" (click)="run.emit();queryInput.control.markAsTouched();">
+            Run
+        </button>
+    </mat-card-actions>
+</mat-card>

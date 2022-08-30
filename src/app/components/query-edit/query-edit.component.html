@@ -5,41 +5,21 @@
         </button>
     </mat-card-content>
 </mat-card>
-<mat-card class="query-builder-input-wrapper" *ngIf="query">
-    <mat-card-content>
-        <div class="query-controls">
-            <mat-form-field class="example-full-width" appearance="fill">
-                <mat-label>Query Name</mat-label>
-                <input type="text" matInput placeholder="Enter query name" [(ngModel)]="query.name" required
-                    [disabled]="!editTitle">
-                <mat-icon *ngIf="!editTitle" (click)="editTitle = true;" matSuffix>
-                    edit
-                </mat-icon>
-                <mat-icon *ngIf="editTitle" (click)="editTitle = false;" matSuffix>
-                    save
-                </mat-icon>
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="queryList?.length">
-                <mat-label>Select existing query here</mat-label>
-                <mat-select [formControl]="selectedQuery" (selectionChange)="onQueryChange(selectedQuery.value)">
-                    <mat-option *ngFor="let query of queryList" [value]="query.id" [routerLink]="['/query', query.id]">
-                        {{query.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-        <sqb-query-input [(ngModel)]="query.rawQuery"></sqb-query-input>
-    </mat-card-content>
-    <mat-divider inset></mat-divider>
-    <mat-card-actions>
-        <button mat-raised-button color="secondary" (click)="save()">
-            Save
-        </button>
-        <button mat-raised-button color="primary" (click)="run()">
-            Run
-        </button>
-    </mat-card-actions>
-</mat-card>
+<mat-accordion>
+    <mat-expansion-panel [expanded]="panelOpenState" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Query Builder
+            </mat-panel-title>
+            <mat-panel-description>
+                Save or run your query here
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <sqb-query-builder [selectedQuery]="selectedQuery" [query]="query" (save)="save()" (run)="run()"
+            (queryChange)="onQueryChange($event)" [queryList]="queryList">
+        </sqb-query-builder>
+    </mat-expansion-panel>
+</mat-accordion>
 <mat-card class="data-viewer" [ngClass]="{hide: !showTableView}">
     <mat-card-title>Table Data</mat-card-title>
     <mat-card-content>
