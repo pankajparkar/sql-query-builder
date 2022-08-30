@@ -1,6 +1,7 @@
 {
   "name": "sql-query-builder",
   "version": "0.0.0",
+  "homepage": "https://pankajparkar.github.io/sql-query-builder",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

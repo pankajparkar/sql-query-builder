@@ -43,10 +43,9 @@ Anyways you can look skip to diagram instead of reading the details from picture
 ---
 
 ### Good to have
-- remove json formatting (json size reduction)
 - Table Export 
 - Expand Table (Full screen mode)
-- Edited query modal to view data 
+- Save columns configuration (hide, search, etc.) 
 
 ---- 
 
@@ -97,3 +96,25 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Performance
+
+### **Initial Page load Time** = 605ms
+### **Page Size** - 229kb (uncompressed 828kb)
+
+![](https://raw.githubusercontent.com/pankajparkar/sql-query-builder/master/perf.jpg)
+
+### Applied lazy loading on routes
+### Apply lazy loading on grid component (on Run button click it loads and boot up).
+
+## Library Used
+
+### **Angular Material** - Design material based component quickly
+### **Ag-grid** - Data Grid with most of enterprise level features baked in.
+### **Standalone componen angular** (NgModule less angular).
+
+## Deployed
+
+Deployed a page to Gh pages.
+
+Accessible by link - https://pankajparkar.github.io/sql-query-builder
